@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>register</title>
+</head>
+<body>
+    <div>
+        <div class="left"></div>
+        <div class="right">
+            <form action="/users/register/" method="post">
+                {% csrf_token %}
+                <input type="text"  name="email"/>
+                <input type="password"  name="password"/>
+                {{ user_register_form.captcha }}
+                <input type="submit" value="submit" />
+            </form>
+            <p>
+                {{ msg }}
+                {% for key , err in user_register_form.errors.items %}
+                    {{ err }}
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

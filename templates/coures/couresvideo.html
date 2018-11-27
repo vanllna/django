@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>video</title>
+</head>
+<body>
+    <div>this is couresvideo html</div>
+    <p>{{ couresinfo.name }}</p>
+
+    {% for lesson in couresinfo.lessoninfo_set.all %}
+        <p>{{ lesson }}</p>
+        {% for video in lesson.videoinfo_set.all %}
+            <p>{{ video.url }}</p>
+        {% endfor %}
+    {% endfor %}
+    <button type="submit" name="jssc" id="jssc">收藏</button>
+    {% for cou in couresinfo.usercourse_set.all|slice:':6' %} <!--显示多少条信息 -->
+            <img src="{{ MEDIA_URL }}{{ cou.study_man.image }}">
+    {% endfor %}
+
+    <textarea name="pl" id="pl" ></textarea>
+    <button type="submit" id="pingl">提交</button>
+    <hr>
+    {% for sort in sort_coures %}
+        {{ forloop.counter }} -- {{ sort }}
+    {% endfor %}
+
+</body>
+<script>
+
+
+    $('#pingl').click(function () {
+        var couresid = {{ couresinfo.id }};
+        var content = $('#pl').val();
+        $.ajax({
+            type:'POST',
+            url:'{% url 'coures:courescomment' %}',
+            data:{
+                couresid : couresid,
+                content : content,
+                csrfmiddlewaretoken:'{{ csrf_token }}',
+            },
+            success:function (callback) {
+                if (callback.status == 'ok'){
+                    window.location.reload()
+                }else{
+                    alert('error')
+                }
+            },
+        })
+    })
+</script>
+</html>

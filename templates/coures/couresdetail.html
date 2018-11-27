@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>couresdetail</title>
+</head>
+<body>
+    <div>this is couresdetail</div>
+
+        <p>{{ couresdetail }} -- <a href="{% url 'coures:couresvideo' couresdetail.id %}"><img src="{{ MEDIA_URL }}{{ couresdetail.image }}"></a></p>
+
+</body>
+</html>

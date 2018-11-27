@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>usercoures</title>
+</head>
+<body>
+    {% for coures in coureslist %}
+        {{ coures.id }}--{{ coures }} -- {{ coures.orgsinfo.name }}
+    {% endfor %}
+
+    {% for org in orgs %}
+        <p>{{ org.name }}</p>
+        <button type="button" id="cancle" class="cancle" data-favid="{{ org.id }}">取消收藏</button>
+    {% endfor %}
+
+</body>
+    <script>
+        $(function () {
+            $('.cancle').click(function () {
+                var loveid = $(this).attr('data-favid');
+                var lovetype = 1;
+                {#获取当前的点击事件的对象#}
+                {#var obj = $(this);#}
+                $.ajax({
+                    type:'GET',
+                    url:'{% url 'operations:user_dellove' %}',
+                    data:{
+                            love_id:loveid,
+                            love_type:lovetype,
+                    },
+                    success:function (callback) {
+                        if (callback.status == 'ok'){
+                            alert(callback.msg);
+                            {#调用当前的点击事件对象 并移除对应的对象#}
+                            {#obj.parents('#cancel').remove()#}
+                        }else{
+                            alert(callback.msg);
+                        }
+                    },
+                })
+            })
+        })
+    </script>
+
+</html>

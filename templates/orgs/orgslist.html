@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>orgslist</title>
+</head>
+<body>
+    <div>this is orgslist</div>
+    <div>
+        {% for imgte in orgslist %}
+        <img src="{{ MEDIA_URL }}{{ imgte.image}}">
+        {% endfor %}
+    </div>
+    <div>
+{#    按机构类别筛选内容#}
+        <ul>
+            <li><a href="?cate=&city={{ city }}&sort={{ sort }}"{% if cate == '' %} style="color: green" {% endif %}>全部</a></li>
+            <li><a href="?cate=pxjg&city={{ city }}&sort={{ sort }}"{% if cate == 'pxjg' %} style="color: green" {% endif %}>培训机构</a></li>
+            <li><a href="?cate=gx&city={{ city }}&sort={{ sort }}"{% if cate == 'gx' %} style="color: green" {% endif %}>高校</a></li>
+            <li><a href="?cate=gr&city={{ city }}&sort={{ sort }}"{% if cate == 'gr' %} style="color: green" {% endif %}>个人</a></li>
+        </ul>
+        {% for cate in orgslist %}
+            <a href="{% url 'orgs:orgsdetail' cate.id %}">{{ cate.name }}</a>
+        {% endfor %}
+    </div>
+<hr>
+
+    <div>
+{#        #按城市筛选内容#}
+        <ul>
+            <li><a href="?cate={{ cate }}&sort={{ sort }}"{% if city == city.id|stringformat:'i' %} style="color: red" {% endif %}>全部</a></li>
+            {% for city in citylist %}
+            <li><a href="?city={{ city.id }}&cate={{ cate }}&sort={{ sort }}" {% if city == city.id|stringformat:'i' %} style="color: red" {% endif %}>{{ city.name }}</a></li>
+            {% endfor %}
+        </ul>
+
+    </div>
+<hr>
+    <div>
+{#        按不同条件排序#}
+        <ul>
+            <li><a href="?sort&cate={{ cate }}&city={{ city }}" {% if sort == '' %} style="color: #1b9dec" {% endif %}>全部</a></li>
+            <li><a href="?sort=study_num&cate={{ cate }}&city={{ city }}" {% if sort == 'study_num' %} style="color: #1b9dec" {% endif %}>学生人数</a></li>
+            <li><a href="?sort=course_num&cate={{ cate }}&city={{ city }}" {% if sort == 'course_num' %} style="color: #1b9dec" {% endif %}>课程数</a></li>
+        </ul>
+    </div>
+
+
+
+<hr>
+
+    {% for orgs in pages %}
+        {% for coures in orgs.courseinfo_set.all %}
+            {{ coures}}
+        {% endfor %}
+        <p>{{ orgs.name }} -- 课程数：{{ orgs.course_num }} -- 学生人数 ：{{ orgs.study_num }}  -- {{ orgs.love_num }} -- {{ orgslist.count }}</p>
+    {% endfor %}
+    <div>
+        <ul>
+            {% if pages.has_previous %}
+            <li><a href="?pagenum = {{ pages.previous_page_number }}&cate={{ cate }}&city={{ city }}&sort={{ sort }}">上一页</a></li>
+{#                返回分页 并接收cate返回的值用于筛选 #}
+            {% endif %}
+            {% for num in pages.paginator.page_range %}
+
+                    <li ><a {% if num == pages.number %} style="color: red" {% endif %} href="?pagenum={{ num }}&cate={{ cate }}&city={{ city }}&sort={{ sort }}">{{ num }}</a></li>
+
+            {% endfor %}
+            {% if pages.has_next %}
+            <li><a href="?pagenum={{ pages.next_page_number }}&cate={{ cate }}&city={{ city }}&sort={{ sort }}">下一页</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div>最爱课程</div>
+    {% for orgs in sort_orgs %}
+        <p> {{ orgs.name }} -- {{ orgs.cityinfo.name }} </p>
+    {% endfor %}
+<hr>
+
+<div>
+        <form action="{% url 'operations:user_ask' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="name" id="username" placeholder="username"/>
+        <input type="tel" name="phone" id="usertel" placeholder="usertel"/>
+        <input type="text" name="course" id="course" placeholder="course"/>
+        <p id="jserror"></p>
+        <input type="submit" value="submit" id="Jsbut">
+    </form>
+</div>
+<hr>
+<button type="submit" value="收藏" class="jsshoucang">收藏</button>
+
+{% for org in orgslist %}
+    <p>{{ org.detail|safe }}</p>
+{#  用safe 转义字符 #}
+{% endfor %}
+
+</body>
+
+<script>
+
+    $(function () {
+        $('#Jsbut').click(function () {
+            {#如果拿的是非表单元素用text() 表单元素用val()#}
+            var username = $('#username').val();
+            var usertel = $('#usertel').val();
+            var course = $('#course').val();
+
+            $.ajax({
+                type:'POST',
+                url:"{% url 'operations:user_ask' %}",
+                data:{
+                  'name':username,
+                  'phone':usertel,
+                  'course':course,
+                  'csrfmiddlewaretoken':'{{ csrf_token }}',
+                },
+                success:function (callback) {
+                        if (callback.status == 'OK'){
+                            alert(callback.msg);
+                            $('#username').val('');
+                            $('#usertel').val('');
+                            $('#course').val('');
+                        }else{
+                            alert(callback.msg);
+                            $('#jserror').text(callback.msg)
+                        }
+                }
+            });
+            {#如果不想让submit有提交的动作 在click后 返回false 阻止提交#}
+            return false;
+        })
+    });
+
+
+    $('.jsshoucang').click(function () {
+        var lovetype = 1;
+        var loveid = 1;
+
+        $.ajax({
+            type:'GET',
+            url:"{% url 'operations:user_love' %}",
+            data:({
+                loveid : loveid,
+                lovetype : lovetype
+            }),
+            success:function (callback) {
+                if (callback.status == 'ok'){
+                    $('.jsshoucang').text(callback.msg);
+                    console.log(ok)
+                }else{
+                    alert(callback.msg);
+                    console.log(error)
+                }
+            }
+        })
+    });
+
+</script>
+
+</html>
+
+
+
+

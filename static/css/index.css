@@ -1,0 +1,96 @@
+*{
+    margin: 0;
+    padding:0;
+}
+
+.top{
+    background-color: black;
+    float: left;
+    width: 100%;
+    height: 30px;
+    overflow: auto;
+
+}
+
+.tel{
+    color: white;
+    margin-left: 360px;
+    float: left;
+    line-height: 30px;
+}
+.login{
+    margin-left: 450px;
+    float: left;
+}
+.login a{
+    color: white;
+    margin-left: 10px;
+    text-decoration: none;
+    line-height: 30px;
+}
+.toplogo{
+    margin-bottom: 2px;
+    float: left;
+}
+
+.logo{
+    width: 120px;
+    height: 90px;
+    float: left;
+    margin-left: 360px;
+}
+.search{
+    float: left;
+    margin-top: 30px;
+    margin-left:450px ;
+}
+.nav{
+    margin-top: 2px;
+    float: left;
+    width: 100%;
+    height:30px;
+    background-color: black;
+}
+.navlist{
+    float: left;
+    margin-left: 360px;
+}
+.nav ul li{
+    list-style: none;
+    display: inline-block;
+    margin-left: 100px;
+
+}
+.nav ul li a{
+    text-decoration: none;
+    color: white;
+    line-height: 30px;
+}
+.main{
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-left: 360px;
+    height: 360px;
+}
+.footer{
+    margin-top: 10px;
+    width: 100%;
+    height: 100px;
+    float: left;
+    background-color: black;
+}
+.footerInfo{
+    color: white;
+    margin-left: 360px;
+    line-height: 100px;
+    width: 100px;
+    float: left;
+}
+
+.footer img{
+    margin-left: 450px;
+    margin-top: 30px;
+    float: left;
+}
+

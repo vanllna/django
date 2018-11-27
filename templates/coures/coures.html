@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>couresinfo</title>
+</head>
+<body>
+    <div> this is couresinfo </div>
+    <div>
+        {% for couinfo in pages %}
+        <p>{% if couinfo.level == 'cj' %}
+            初级
+            {% elif couinfo.level == 'zj' %}
+            中级
+            {% else %}
+            高级
+            {% endif %}
+        </p>
+        {% endfor %}
+    </div>
+
+    <div>
+        <ul>
+            <li ><a href="?sort=" {% if sort == '' %} style="color: red" {% endif %}>all</a></li>
+            <li><a href="?sort=love_num" {% if sort == 'love_num' %} style="color: red" {% endif %}>lovenum</a></li>
+            <li><a href="?sort=click_num" {% if sort == 'click_num' %} style="color: red" {% endif %}>clicknum</a></li>
+        </ul>
+    </div>
+    {% for coures in pages %}
+        <p><a href="{% url 'coures:couresdetail' coures.id %}">{{ coures.name }} -- click_num:{{ coures.click_num }} -- love_num:{{ coures.love_num }} -- {{ coures.level }}</a></p>
+        {{ coures.id }}
+    {% endfor %}
+
+
+    <div class="pages">
+        <ul>
+            {% if pages.has_previous %}
+            <li><a href="?pagenum={{ pages.previous_page_number }}&sort={{ sort }}">上一页</a></li>
+            {% endif %}
+
+            {% for num in pages.paginator.page_range %}
+            <li><a href="?pagenum={{ num }}&sort={{ sort }}">{{ num }}</a></li>
+            {% endfor %}
+
+            {% if pages.has_next %}
+            <li><a href="?pagenum={{ pages.next_page_number }}&sort={{ sort }}">下一页</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+</body>
+</html>

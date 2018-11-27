@@ -1,0 +1,46 @@
+{% extends 'users/base.html' %}
+
+{% block title %}<title>userinfo</title> {% endblock %}
+
+
+{% block menu %} {% endblock %}
+
+{% block main %}
+<form action="{% url 'users:userchangeinfo' %}" method="post" style="float: left ;margin:120px 0px 0px 320px">
+{% csrf_token %}
+<input  type="text" name="nick_name" id="nick_name" value="{{ request.user.nick_name }}"/>
+<input  type="text" name="tel" id="tel" value="{{ request.user.tel}}"/>
+{#<img src="{{ MEDIA_URL }}{{ request.user.image }}" />#}
+{#<input type="file" id="userchange" name="userchange" />#}
+<input type="submit" name="jsbtu" id="jsbtu" />
+</form>
+
+{% endblock %}
+
+<script>
+    $(function () {
+        $('#jsbtu').click(function () {
+            var nick_name = $('#nick_name').val();
+            var tel = $('#tel').val();
+            $.ajax({
+                type:'POST',
+                url:'{% url 'users:userchangeinfo' %}',
+                data:{
+                    nick_name:nick_name,
+                    tel:tel,
+                    csrfmiddlewaretoken:'{{ csrf_token }}',
+                },
+                success:function (callback) {
+                    if (callback.status == 'ok'){
+                            callback.msg;
+                            window.location.reload()
+                    }else{
+                        callback.msg;
+                    }
+                }
+            })
+        })
+    })
+
+</script>
+
