@@ -157,7 +157,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'static/media')
 EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = 'haoran19881213@163.com'
-EMAIL_HOST_PASSWORD = 'ly247336470'
+EMAIL_HOST_PASSWORD = '**********'
 EMAIL_FROM = 'haoran19881213@163.com'
 
 
